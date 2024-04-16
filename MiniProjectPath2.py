@@ -12,4 +12,10 @@ dataset_2['Williamsburg Bridge']  = pandas.to_numeric(dataset_2['Williamsburg Br
 #print(dataset_2.to_string()) #This line will print out your data
 
 
-mbv nb
+def trafficModel(bridge1, bridge2, bridge3):
+    x = dataset_2(f"{bridge1} Bridge", f"{bridge2} Bridge", f"{bridge3} Bridge").values
+    y = dataset_2("Total").values
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+    model = linearRegression()
+    model.fit(x_train, y_train)
