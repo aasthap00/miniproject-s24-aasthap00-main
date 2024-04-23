@@ -1,8 +1,13 @@
 import pandas
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 import numpy as np
+
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LinearRegression
+
 
 
 ''' 
@@ -27,22 +32,45 @@ dataset_2['Precipitation']  = pandas.to_numeric(dataset_2['Precipitation'].repla
 
 df1 = pandas.DataFrame(dataset_2[["High Temp", "Low Temp", "Precipitation", "Total"]])
 print(df1.head())
+print(df1.corr())
 
 X = np.array(df1[["High Temp", "Low Temp", "Precipitation"]])
 Y = np.array(df1[["Total"]])
 
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
-model = LinearRegression()
-model.fit(X_train, y_train)
+# model = LinearRegression()
+# model.fit(X_train, y_train)
 
-y_pred = model.predict(X_test)
+# y_pred = model.predict(X_test)
 
 
-MSE = np.square(np.subtract(y_test,y_pred)).mean()
+# MSE = mean_squared_error(y_test,y_pred)
+# print(MSE)
+
+
+poly = PolynomialFeatures(degree=3)
+
+X_ = poly.fit_transform(X_train)
+predict = poly.fit_transform(X_test)
+clf = linear_model.LinearRegression()
+clf.fit(X_,y_train)
+y_pred = clf.predict(predict)
+
+MSE = mean_squared_error(y_pred,y_test)
 print(MSE)
 
 
+# model = Pipeline([
+#     ('polynomial_features', PolynomialFeatures(degree=3)),
+#     ('linear_regression', LinearRegression())
+# ])
 
+# # Fit the model
+# model.fit(X_train,y_train)
 
+# y_pred = model.predict(X_test)
+
+# MSE = mean_squared_error(y_pred,y_test)
+# print(MSE)
 
